@@ -1,0 +1,2 @@
+# SharinPix Status Page
+
