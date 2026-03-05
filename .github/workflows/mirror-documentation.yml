@@ -1,0 +1,88 @@
+name: Mirror SharinPix Documentation
+
+on:
+  schedule:
+    - cron: "10 2 * * 0"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout destination main
+        uses: actions/checkout@v4
+
+      - name: Clone upstream main
+        env:
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          rm -rf /tmp/upstream
+          git clone --depth 1 --branch main \
+            "https://x-access-token:${{ secrets.SOURCE_READ_PAT }}@github.com/SharinPix/documentation.git" \
+            /tmp/upstream
+
+      - name: Copy upstream into repo (keep workflows + LICENSE)
+        run: |
+          rsync -a --delete \
+            --exclude '.git/' \
+            --exclude '.github/workflows/' \
+            --exclude 'LICENSE' \
+            --exclude 'upstream/' \
+            /tmp/upstream/ ./
+
+      - name: Remove hidden files
+        run: |
+          # Remove entire folders if README.md has "hidden: true" (except specified folders)
+          find . -type f -name "README.md" | while read readme; do
+            dir=$(dirname "$readme")
+            dir_name=$(basename "$dir")
+            
+            # Skip these folders even if their README is hidden
+            if [[ "$dir_name" == "getting-started-with-sharinpix" ]] || \
+               [[ "$dir_name" == "best-practices" ]] || \
+               [[ "$dir_name" == "sharinpix-form" ]]; then
+              continue
+            fi
+            
+            if head -20 "$readme" | grep -q "^hidden: true$"; then
+              echo "Removing hidden folder: $dir"
+              rm -rf "$dir"
+            fi
+          done
+          
+          # Remove individual markdown files with "hidden: true" in frontmatter
+          find . -type f -name "*.md" | while read file; do
+            dir=$(dirname "$file")
+            dir_name=$(basename "$dir")
+            file_name=$(basename "$file")
+            
+            # Keep README.md in these special folders even if hidden
+            if [[ "$file_name" == "README.md" ]] && \
+               ([[ "$dir_name" == "getting-started-with-sharinpix" ]] || \
+                [[ "$dir_name" == "best-practices" ]] || \
+                [[ "$dir_name" == "sharinpix-form" ]]); then
+              continue
+            fi
+            
+            if head -20 "$file" | grep -q "^hidden: true$"; then
+              echo "Removing hidden file: $file"
+              rm "$file"
+            fi
+          done
+
+      - name: Commit & push (single commit)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+
+          git commit --amend --no-edit || git commit -m "chore(docs): sync from upstream main"
+          git push --force
