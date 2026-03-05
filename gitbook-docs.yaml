@@ -1,0 +1,134 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+site:
+  title: SharinPix Docs
+  structure:
+    - type: section
+      key: section-1
+      title: Home
+      path: home
+      description: Welcome to SharinPix Documentation.
+      icon: house
+      default: true
+      children:
+        - type: space
+          key: space-1
+          title: Home
+          path: landing-page
+          default: true
+          content:
+            directory: ./home
+    - type: section
+      key: section-3
+      title: Getting Started
+      path: getting-started
+      description: ""
+      icon: rocket-launch
+      children:
+        - type: space
+          key: space-3
+          title: Getting Started
+          path: getting-started
+          default: true
+          content:
+            directory: ./documentations/getting-started-with-sharinpix
+    - type: section
+      key: section-6
+      title: Best Practices
+      path: best-practices
+      icon: trophy
+      children:
+        - type: space
+          key: space-6
+          title: Best Practices
+          path: untitled
+          default: true
+          content:
+            directory: ./documentations/best-practices
+    - type: section
+      key: section-5
+      title: Forms
+      path: forms
+      description: ""
+      icon: ballot-check
+      children:
+        - type: space
+          key: space-5
+          title: Forms
+          path: untitled
+          default: true
+          content:
+            directory: ./documentations/sharinpix-form
+    - type: section
+      key: section-7
+      title: All Articles
+      path: documentation
+      description: ""
+      icon: folders
+      children:
+        - type: space
+          key: space-7
+          title: All Articles
+          path: untitled
+          default: true
+          content:
+            directory: ./documentations
+    - type: section-group
+      key: section-group-1
+      title: Resources
+      icon: list-tree
+      children:
+        - type: section
+          key: section-2
+          title: FAQs
+          path: faqs
+          description: ""
+          icon: question
+          children:
+            - type: space
+              key: space-2
+              title: FAQs
+              path: faq
+              default: true
+              content:
+                directory: ./resources/faqs
+        - type: section
+          key: section-4
+          title: Release Notes
+          path: release-notes
+          icon: memo-pad
+          children:
+            - type: space
+              key: space-4
+              title: Release Notes
+              path: untitled
+              default: true
+              content:
+                directory: ./resources/release-notes
+        - type: section
+          key: section-8
+          title: Changelog
+          path: changelog
+          description: ""
+          icon: pen-to-square
+          children:
+            - type: space
+              key: space-8
+              title: Changelog
+              path: change-logs
+              default: true
+              content:
+                directory: ./changelog/change-logs
+    - type: section
+      key: section-9
+      title: FieldKnot
+      path: fieldknot
+      icon: camera-rotate
+      children:
+        - type: space
+          key: space-9
+          title: Product Docs
+          path: product-docs
+          default: true
+          draft: true
+          content:
+            directory: ./fieldknot/product-docs
